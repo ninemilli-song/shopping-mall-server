@@ -38,9 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -104,6 +106,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Allowed cors request whitelist, django-cors-headers middleware
+CORS_ORIGIN_WHITELIST = (
+    '127.0.0.1:3000',
+    'localhost:3000'
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
