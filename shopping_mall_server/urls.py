@@ -15,8 +15,34 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
+from django.contrib.auth.models import User
+from rest_framework import routers, serializers, viewsets
+from rest_framework_jwt.views import obtain_jwt_token
+
+
+# Serializers define the API representation.
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
+        fields = ('url', 'username', 'email', 'is_staff')
+
+
+# ViewSets define the view behavior.
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+# Routers provide an easy way of automatically determining the URL conf.
+router = routers.DefaultRouter()
+router.register(r'users', UserViewSet)
 
 urlpatterns = [
+    re_path(r'^', include(router.urls)),
     re_path(r'^api/', include('api.urls')),
+    # If you're intending to use the browsable API you'll probably also want
+    # to add REST framework's login and logout views.
+    re_path(r'^api-auth/', include('rest_framework.urls')),
+    re_path(r'^api-token-auth/', obtain_jwt_token),
     path('admin/', admin.site.urls),
 ]
